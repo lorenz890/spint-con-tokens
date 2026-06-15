@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+  name String @unique
+  quantity Int @default(0)
+  price Int @default(999)
+  createdAt DateTime @default(now())
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  products Product[]
+}
+
+// Modelo de usuario para autenticación
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   // se guarda hasheada, nunca en texto plano
+  role      String   @default("user") // "user" o "admin"
+  createdAt DateTime @default(now())
+}
