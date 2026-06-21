@@ -3,7 +3,9 @@ import cors from "cors";
 import morgan from "morgan"; // Logging de requests HTTP
 import productRoutes from "./routes/products.routes.js";
 import categoryRoutes from "./routes/categories.routes.js";
-import authRoutes from "./routes/auth.routes.js"; // Rutas de login/register
+import authRoutes from "./routes/auth.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
+import userRoutes from "./routes/users.routes.js";
 import { prisma } from "./db.js";
 
 const app = express();
@@ -17,9 +19,11 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 // Registrar las rutas
-app.use("/api", authRoutes);       // /api/auth/register y /api/auth/login
-app.use("/api", productRoutes);    // /api/products
-app.use("/api", categoryRoutes);   // /api/categories
+app.use("/api", authRoutes);
+app.use("/api", productRoutes);
+app.use("/api", categoryRoutes);
+app.use("/api", cartRoutes);
+app.use("/api", userRoutes);
 
 // Middleware de manejo de errores (tiene que ir al final)
 app.use((err, req, res, next) => {

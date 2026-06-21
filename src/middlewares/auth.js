@@ -27,11 +27,18 @@ export const verifyToken = (req, res, next) => {
   }
 };
 
-// Verifica que el usuario sea admin
+// Verifica que el usuario sea admin o superadmin
 export const verifyAdmin = (req, res, next) => {
-  // Este middleware se usa DESPUÉS de verifyToken, así que req.user ya existe
-  if (req.user.role !== "admin") {
+  if (req.user.role !== "admin" && req.user.role !== "superadmin") {
     return next(new AppError("No tenés permisos de administrador", 403));
+  }
+  next();
+};
+
+// Verifica que el usuario sea superadmin
+export const verifySuperAdmin = (req, res, next) => {
+  if (req.user.role !== "superadmin") {
+    return next(new AppError("Solo el superadmin puede hacer esto", 403));
   }
   next();
 };

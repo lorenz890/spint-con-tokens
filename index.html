@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>productos-app</title>
+    <title>Productos App</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -11,7 +11,7 @@
 
       <div id="mensaje"></div>
 
-      <!-- Sección de Login/Register (se ve cuando NO estás logueado) -->
+      <!-- LOGIN / REGISTER -->
       <div id="auth-section">
         <h2>Iniciar sesión</h2>
         <form id="login-form">
@@ -28,38 +28,84 @@
         </form>
       </div>
 
-      <!-- Sección de Productos (se ve cuando SÍ estás logueado) -->
-      <div id="productos-section" style="display: none;">
+      <!-- SECCIÓN PRINCIPAL (logueado) -->
+      <div id="main-section" style="display:none;">
+
+        <!-- Barra superior -->
         <div id="user-info">
-          <span id="user-email"></span>
+          <span>
+            <strong id="user-email"></strong>
+            <span id="role-badge" class="role-badge"></span>
+          </span>
           <button id="btn-logout">Cerrar sesión</button>
         </div>
 
-        <form id="product-form">
-          <input type="text" id="product-name" placeholder="Nombre del producto" />
-          <input type="number" id="product-price" placeholder="Precio" />
-          <input type="number" id="product-stock" placeholder="Stock" />
-          <select id="product-category">
-            <option value="">Selecciona una categoría</option>
-          </select>
-          <input type="hidden" id="editing-id" value="">
-          <button type="submit" id="btn-product">Agregar Producto</button>        
-        </form>
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-productos">Productos</button>
+          <button class="tab-btn" data-tab="tab-carrito" id="tab-btn-carrito" style="display:none;">🛒 Mi Carrito</button>
+          <button class="tab-btn" data-tab="tab-usuarios" id="tab-btn-usuarios" style="display:none;">Usuarios</button>
+        </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="productos"></tbody>
-        </table>
+        <!-- TAB: PRODUCTOS -->
+        <div id="tab-productos" class="tab-content active">
+
+          <!-- Formulario solo para admin/superadmin -->
+          <div id="admin-product-form-section" style="display:none;">
+            <h3>Agregar / Editar producto</h3>
+            <form id="product-form">
+              <input type="text" id="product-name" placeholder="Nombre del producto" />
+              <input type="number" id="product-price" placeholder="Precio" />
+              <input type="number" id="product-stock" placeholder="Stock" />
+              <select id="product-category">
+                <option value="">Seleccioná una categoría</option>
+              </select>
+              <input type="hidden" id="editing-id" value="" />
+              <button type="submit" id="btn-product">Agregar Producto</button>
+            </form>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-productos"></tbody>
+          </table>
+        </div>
+
+        <!-- TAB: CARRITO (solo user) -->
+        <div id="tab-carrito" class="tab-content">
+          <h3 style="margin-bottom:14px;">Mi Carrito</h3>
+          <div id="carrito-lista"></div>
+          <div id="carrito-total"></div>
+          <button id="btn-checkout">Confirmar compra</button>
+        </div>
+
+        <!-- TAB: USUARIOS (solo superadmin) -->
+        <div id="tab-usuarios" class="tab-content">
+          <h3 style="margin-bottom:14px;">Gestión de Usuarios</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Rol actual</th>
+                <th>Cambiar rol</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-usuarios"></tbody>
+          </table>
+        </div>
+
       </div>
-
     </div>
+
     <script type="module" src="main.js"></script>
   </body>
 </html>

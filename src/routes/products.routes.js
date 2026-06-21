@@ -3,7 +3,7 @@
 import { Router } from "express";
 import { prisma } from "../db.js";
 import validateFields from "../middlewares/validateFields.js";
-import { verifyToken } from "../middlewares/auth.js"; // Middleware de autenticación
+import { verifyToken, verifyAdmin } from "../middlewares/auth.js";
 import AppError from "../utils/AppError.js";
 import {
 	categoryNotFound,
@@ -49,8 +49,8 @@ router.get("/products/:id", validateProductId, validateFields, async (req, res, 
 	}
 });
 
-// POST /products - Protegido: necesita token válido
-router.post("/products", verifyToken, createProductValidators, validateFields, async (req, res, next) => {
+// POST /products - Solo admin/superadmin
+router.post("/products", verifyToken, verifyAdmin, createProductValidators, validateFields, async (req, res, next) => {
 	try {
 		const { name, price, quantity, categoryId } = req.body;
 
@@ -79,7 +79,7 @@ router.post("/products", verifyToken, createProductValidators, validateFields, a
 		}
 
 		const product = await prisma.product.create({
-			data: req.body,
+			data: { ...req.body, token: crypto.randomUUID() },
 		});
 		res.json(product);
 	} catch (error) {
@@ -90,8 +90,8 @@ router.post("/products", verifyToken, createProductValidators, validateFields, a
 	}
 });
 
-// DELETE /products/:id - Protegido: necesita token válido
-router.delete("/products/:id", verifyToken, validateProductId, validateFields, async (req, res, next) => {
+// DELETE /products/:id - Solo admin/superadmin
+router.delete("/products/:id", verifyToken, verifyAdmin, validateProductId, validateFields, async (req, res, next) => {
 	try {
 		const product = await prisma.product.delete({
 			where: {
@@ -104,8 +104,8 @@ router.delete("/products/:id", verifyToken, validateProductId, validateFields, a
 	}
 });
 
-// PATCH /products/:id - Protegido: necesita token válido
-router.patch("/products/:id", verifyToken, updateProductValidators, validateFields, async (req, res, next) => {
+// PATCH /products/:id - Solo admin/superadmin
+router.patch("/products/:id", verifyToken, verifyAdmin, updateProductValidators, validateFields, async (req, res, next) => {
 	try {
 		const { name, price, quantity, categoryId } = req.body;
 
