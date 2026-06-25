@@ -43,7 +43,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   })
 })
 
-// ── Login / Logout ─────────────────────────────────────────────
+//Login 
 document.getElementById('login-form').addEventListener('submit', async e => {
   e.preventDefault()
   const email    = document.getElementById('login-email').value
@@ -79,7 +79,7 @@ document.getElementById('btn-logout').addEventListener('click', () => {
   mostrarMensaje('Sesión cerrada', 'green')
 })
 
-// ── Iniciar sesión ─────────────────────────────────────────────
+// ── Iniciar sesión 
 async function iniciarSesion(decoded) {
   userRole = decoded.role
   userEmailSpan.textContent = decoded.email
@@ -293,7 +293,7 @@ document.getElementById('btn-checkout').addEventListener('click', async () => {
   } catch (err) { mostrarMensaje(err.message, 'red') }
 })
 
-// ── Usuarios (superadmin) ──────────────────────────────────────
+// Usuario (superadmin)
 async function renderUsuarios() {
   const tbody = document.getElementById('tabla-usuarios')
   try {
@@ -304,26 +304,30 @@ async function renderUsuarios() {
     usuarios.forEach(u => {
       const tr = document.createElement('tr')
       const esSelf = u.id === miId
-
-      tr.innerHTML = `
-        <td>${u.id}</td>
-        <td>${u.email}</td>
-        <td>${u.role}</td>
-        <td>
-          ${esSelf
-            ? '<em style="color:#aaa;">Tu cuenta</em>'
-            : `
-              <select class="role-select" data-uid="${u.id}">
-                <option value="user"       ${u.role === 'user'       ? 'selected' : ''}>user</option>
-                <option value="admin"      ${u.role === 'admin'      ? 'selected' : ''}>admin</option>
-                <option value="superadmin" ${u.role === 'superadmin' ? 'selected' : ''}>superadmin</option>
-              </select>
-              <button class="btn-cambiar-rol" data-uid="${u.id}">Guardar</button>
-            `
-          }
-        </td>
-      `
-      tbody.appendChild(tr)
+      if (userRole === 'superadmin'){
+        tr.innerHTML = `
+          <td>${u.id}</td>
+          <td>${u.email}</td>
+          <td>${u.role}</td>
+          <td>
+            ${esSelf
+              ? '<em style="color:#aaa;">Tu cuenta</em>'
+              : `
+                <select class="role-select" data-uid="${u.id}">
+                  <option value="user"       ${u.role === 'user'       ? 'selected' : ''}>user</option>
+                  <option value="admin"      ${u.role === 'admin'      ? 'selected' : ''}>admin</option>
+                  <option value="superadmin" ${u.role === 'superadmin' ? 'selected' : ''}>superadmin</option>
+                </select>
+                <button class="btn-cambiar-rol" data-uid="${u.id}">Guardar</button>
+              `
+            }
+          </td>
+        `
+             tbody.appendChild(tr)
+      }else{
+        tbody.innerHTML = 'no tiene permisos para ver esto'
+      }
+     
     })
 
     tbody.querySelectorAll('.btn-cambiar-rol').forEach(btn => {
